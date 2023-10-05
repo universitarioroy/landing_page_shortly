@@ -4,9 +4,12 @@
   "description": "¡Hola, Comunidad!",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "gh-pages -d ."
   },
   "keywords": [],
   "author": "Edgar Huaman",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "gh-pages": "^6.0.0"
+  }
 }
