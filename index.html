@@ -197,12 +197,16 @@
         /* main-shorted-link */
         .main-shorted-items{
             position: relative;
-            padding: 10rem 2rem 4rem;
+            /* padding: 10rem 2rem 4rem; */
+            padding-left:2rem;
+            padding-right: 2rem;
+            padding-bottom: 2rem;
             background-color:var(--color-custom-gray);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 250px;
+            /* min-height: 250px; */
+            min-height: 60px;
         }
 
         .main-shorted-items>div:nth-child(n+3){
@@ -238,12 +242,27 @@
 
         }
 
+        .main-shorted-link__message{
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-shorted-link span{
+            color: var(--color-Red);
+            font-size: 1rem;
+            display: none;
+        }
+
         .main-shorted-link__form--input{
             outline: none;
             padding: 10px 12px;
-
         }
 
+        .main-shorted-link__form--input::placeholder{
+            font-size: 1.5rem;
+            color: var(--color-placeholder,hsl(0, 0%, 75%));
+        }
+        
         .main-shorted-link__form--button{
             background-color: var(--color-Cyan);
             font-weight: bold;
@@ -263,6 +282,7 @@
             flex-direction: column;
             justify-content: center;
             font-size: 1.5rem;
+            margin-top: 10rem;
             
         }
         
@@ -309,7 +329,7 @@
         .main-statistics{
             min-height:1050px;
             background-color: rgb(239,241,247);
-            padding: 4rem 2rem;
+            padding: 3rem 2rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -549,6 +569,7 @@
             .main-shorted-item{
                 width: 48%;
                 margin-bottom: 30px;
+                margin-top: 0;
             }
 
             .main-shorted-items>div:nth-child(n+3){
@@ -620,6 +641,7 @@
             .footer-redes{
                 width: 70%;
                 justify-content: space-evenly;
+                height: 30px;
             }
         }
 
@@ -726,6 +748,7 @@
                 flex-direction: row;
                 min-height: 60px;
                 align-items: center;
+                margin-top: 0;
             }
 
             .main-shorted-link{
@@ -755,7 +778,7 @@
 
             .main-shorted-item__link--form{
                 line-height: 40px;
-                flex-grow: 1;
+                width: 100px;
             }
 
             .main-shorted-items>div:nth-child(n+3){
@@ -854,6 +877,7 @@
             .footer-redes{
                 width: 70%;
                 justify-content: space-evenly;
+                height: 30px;
             }
         }
         @media only screen and (min-width:993px){
@@ -963,6 +987,7 @@
                 flex-direction: row;
                 min-height: 60px;
                 align-items: center;
+                margin-top: 0;
             }
 
             .main-shorted-link{
@@ -992,7 +1017,7 @@
 
             .main-shorted-item__link--form{
                 line-height: 40px;
-                flex-grow: 1;
+                width: 150px;
             }
 
             .main-shorted-items>div:nth-child(n+3){
@@ -1091,6 +1116,7 @@
 
             .footer-redes{
                 width: 60%;
+                height: 30px;
                 justify-content: space-evenly;
             }
         }
@@ -1137,27 +1163,12 @@
         <section class="main-shorted-items">
             
             <form class="main-shorted-link">
-                <input class="main-shorted-link__form--input" type="text" placeholder="Shorten a link here...">
+                <div class="main-shorted-link__message">
+                    <input name="ingreoLink" class="main-shorted-link__form--input" type="text" placeholder="Shorten a link here...">
+                    <span>Please add a link</span>
+                </div>
                 <button class="main-shorted-link__form--button">Shorten It!</button>
             </form>
-            
-            <div class="main-shorted-item">
-                <p class="main-shorted-item__link--tall">example.org/very/long/link.html</p>
-                <p class="main-shorted-item__link--small">http://www.Frontend.io</p>
-                <form class="main-shorted-item__link--form">
-                    <button>Copy</button>
-                </form>
-            </div>
-            
-            <div class="main-shorted-item">
-                <p class="main-shorted-item__link--tall">example.org/very/long/link.html</p>
-                <p class="main-shorted-item__link--small">http://www.Frontend.io</p>
-                <form class="main-shorted-item__link--form">
-                    <button>Copy</button>
-                </form>
-            </div>
-            
-            
             
         </section>
 
@@ -1257,9 +1268,181 @@
   <script>
         const menu=document.querySelector('.header__menu');
         const options=document.querySelector('.header-options');
+        const input=document.querySelector('.main-shorted-link__form--input');
+        const btnAdd=document.querySelector('.main-shorted-link__form--button');
+        const forms = document.querySelectorAll('form');
+        const constaintLink=document.querySelector('.main-shorted-items');
+        const message=document.querySelector('.main-shorted-link span');
+        
+        
+        function initStorage(){
+            let linksRemote=JSON.parse(localStorage.getItem("listaLink"));
+            if(!linksRemote){
+                localStorage.setItem("listaLink",JSON.stringify([]));
+            }
+        }
+        
+        function getStorage(){
+            return JSON.parse(localStorage.getItem("listaLink"));
+        }
+        
+        function listDom(){
+            getStorage().forEach((cardLink)=>{
+                const link=document.createElement('div');
+                link.classList.add('main-shorted-item');
+
+                const btn=document.createElement('button');
+                btn.textContent="Copy";
+                const form=document.createElement('form');
+                form.classList.add('main-shorted-item__link--form');
+                form.appendChild(btn);
+                form.addEventListener('submit',(e)=>{
+                    e.preventDefault();
+                });
+
+                const linkSmall=document.createElement('p');
+                linkSmall.textContent=cardLink.short;
+                linkSmall.classList.add('main-shorted-item__link--small');
+
+                const linkTall=document.createElement('p');
+                linkTall.textContent=cardLink.id;
+                linkTall.classList.add('main-shorted-item__link--tall');
+
+                link.appendChild(linkTall);
+                link.appendChild(linkSmall);
+                link.appendChild(form);
+                constaintLink.appendChild(link);
+                
+                btn.addEventListener('click',(event)=>{
+                    btn.innerText="Copied!"; 
+                    btn.style.backgroundColor="hsl(257, 27%, 26%)";
+                });
+            });
+        }
+
+        function addDom(url,resultado){
+            const link=document.createElement('div');
+            link.classList.add('main-shorted-item');
+            
+            const btn=document.createElement('button');
+            btn.textContent="Copy";
+            const form=document.createElement('form');
+            form.classList.add('main-shorted-item__link--form');
+            form.appendChild(btn);
+            
+            form.addEventListener('submit',(e)=>{
+                e.preventDefault();
+            });
+            
+            const linkSmall=document.createElement('p');
+            linkSmall.textContent=resultado;
+            linkSmall.classList.add('main-shorted-item__link--small');
+            
+            const linkTall=document.createElement('p');
+            linkTall.textContent=url;
+            linkTall.classList.add('main-shorted-item__link--tall');
+            
+            link.appendChild(linkTall);
+            link.appendChild(linkSmall);
+            link.appendChild(form);
+            constaintLink.appendChild(link);
+            const obj={id:url,short:resultado};
+            linksRemote=getStorage();
+            linksRemote.push(obj);
+            
+            localStorage.setItem("listaLink",JSON.stringify(linksRemote));
+
+            btn.addEventListener('click',(event)=>{
+                btn.innerText="Copied!"; 
+                btn.style.backgroundColor="hsl(257, 27%, 26%)";
+            });
+
+            input.value='';
+        }
+        
+        function consultaApi(url,callback){
+            
+            fetch(`https://api.shrtco.de/v2/shorten?url=${url}`)
+            .then((response)=>{return response.json()})
+            .then((data)=>{
+                callback(url,data.result.full_short_link);
+            })
+            .catch((error)=>{
+                console.log('Errores en la consulta');
+            });
+        }
+
+        function inicio(forms){
+            forms.forEach(form => {
+                // Aquí puedes trabajar con cada formulario (form)
+                form.addEventListener('submit',function(event){
+                    event.preventDefault(); 
+                });
+            })
+            initStorage();
+            listDom();
+        }
+        
+        function validarURL(url) {
+                const regex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.){1,}[a-zA-Z0-9-]+(\/.*)?$/;
+                return regex.test(url);
+        }
+
+        function validateUrlExisting(url){
+            const valid=getStorage().find((link)=>{
+                return url===link.id;
+            });
+            return valid;
+        }
+        
+        inicio(forms);
+
         menu.addEventListener('click',function(){
             options.classList.toggle('show-menu');
         });
+
+        btnAdd.addEventListener('click',function(){
+            
+            if(!input.value){
+                input.style.setProperty("--color-placeholder", "hsl(0, 87%, 67%)");
+                input.style.border="2px solid hsl(0, 87%, 67%)";
+                message.style.display="block";
+                message.innerText="Please add a link";
+                throw Error('Please add a link');
+            }
+
+            if(!validarURL(input.value)){
+                input.style.setProperty("--color-placeholder", "hsl(0, 87%, 67%)");
+                input.style.border="2px solid hsl(0, 87%, 67%)";
+                message.style.display="block";
+                message.innerText="No url valid";
+                throw Error('No url valid');  
+            }
+            
+
+            if(validateUrlExisting(input.value)){
+                input.style.setProperty("--color-placeholder", "hsl(0, 87%, 67%)");
+                input.style.border="2px solid hsl(0, 87%, 67%)";
+                message.style.display="block";
+                message.innerText="Url Exisitng";
+                throw Error('Url Exisitng');  
+            };
+
+            input.style.setProperty("--color-placeholder", "hsl(0, 0%, 75%)");
+            input.style.border="none";
+            message.style.display="none";
+
+            consultaApi(input.value,
+                function(url,resultado){
+                    addDom(url,resultado);
+                });
+
+        });
+
+
+
+
+
   </script>
 </body>
 </html>
