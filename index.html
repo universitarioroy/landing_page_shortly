@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
     <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
     <title>Frontend Mentor | Shortly URL shortening API Challenge</title>
-    
+    <meta http-equiv="Cache-control" content="no-cache">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
@@ -1138,8 +1138,8 @@
                 <a href="">Resources</a>
             </nav>
             <form class="header__login">
-                <button>Login</button>
-                <button>Sign Up</button>
+                <button type="button">Login</button>
+                <button type="button">Sign Up</button>
             </form> 
         </div>
        <p class="header__menu">
@@ -1155,7 +1155,7 @@
                 <p class="main-home__description--texto"> Build your brand’s recognition and get detailed insights 
                     on how your links are performing.</p>
                 <form class="main-home__description--start">
-                    <button>Get Started</button>
+                    <button type="button">Get Started</button>
                 </form>
             </div>
         </section>
@@ -1167,7 +1167,7 @@
                     <input name="ingreoLink" class="main-shorted-link__form--input" type="text" placeholder="Shorten a link here...">
                     <span>Please add a link</span>
                 </div>
-                <button class="main-shorted-link__form--button">Shorten It!</button>
+                <button class="main-shorted-link__form--button" type="button">Shorten It!</button>
             </form>
             
         </section>
@@ -1214,7 +1214,7 @@
         <section class="main-boots">
             <p class="main-boots__titulo">Boost your links today</p>
             <form class="main-boots__start">
-                <button>Get Started</button>
+                <button type="button">Get Started</button>
             </form>
         </section>
     </main>
@@ -1250,19 +1250,13 @@
             </div>
         </div>
         <div class="footer-redes">
-            <a href=""><i class="fa-brands fa-square-facebook"></i></a>
-            <a href=""><i class="fa-brands fa-twitter"></i></a>
-            <a href=""><i class="fa-brands fa-pinterest"></i></a>
-            <a href=""><i class="fa-brands fa-instagram"></i></a>
+            <a href="www.facebook.com" aria-label="Facebook"><i class="fa-brands fa-square-facebook"></i></a>
+            <a href="www.twiter.com" aria-label="twiter"> <i class="fa-brands fa-twitter"></i></a>
+            <a href="www.pinterest.com" aria-label="pinterest"><i class="fa-brands fa-pinterest"></i></a>
+            <a href="www.instagram.com" aria-label="instagram"><i class="fa-brands fa-instagram"></i></a>
         </div>
 
     </footer>
-
-
-
-    <!-- api -->
-    <!-- https://api.shrtco.de/v2/shorten?url=example.org/very/long/link.html    -->
- 
 
   <script src="https://kit.fontawesome.com/cab93a9ab8.js" crossorigin="anonymous"></script>
   <script>
@@ -1273,8 +1267,7 @@
         const forms = document.querySelectorAll('form');
         const constaintLink=document.querySelector('.main-shorted-items');
         const message=document.querySelector('.main-shorted-link span');
-        
-        
+
         function initStorage(){
             let linksRemote=JSON.parse(localStorage.getItem("listaLink"));
             if(!linksRemote){
@@ -1285,42 +1278,8 @@
         function getStorage(){
             return JSON.parse(localStorage.getItem("listaLink"));
         }
-        
-        function listDom(){
-            getStorage().forEach((cardLink)=>{
-                const link=document.createElement('div');
-                link.classList.add('main-shorted-item');
-
-                const btn=document.createElement('button');
-                btn.textContent="Copy";
-                const form=document.createElement('form');
-                form.classList.add('main-shorted-item__link--form');
-                form.appendChild(btn);
-                form.addEventListener('submit',(e)=>{
-                    e.preventDefault();
-                });
-
-                const linkSmall=document.createElement('p');
-                linkSmall.textContent=cardLink.short;
-                linkSmall.classList.add('main-shorted-item__link--small');
-
-                const linkTall=document.createElement('p');
-                linkTall.textContent=cardLink.id;
-                linkTall.classList.add('main-shorted-item__link--tall');
-
-                link.appendChild(linkTall);
-                link.appendChild(linkSmall);
-                link.appendChild(form);
-                constaintLink.appendChild(link);
-                
-                btn.addEventListener('click',(event)=>{
-                    btn.innerText="Copied!"; 
-                    btn.style.backgroundColor="hsl(257, 27%, 26%)";
-                });
-            });
-        }
-
-        function addDom(url,resultado){
+    
+        function makeDom(linkOri,shortLink){
             const link=document.createElement('div');
             link.classList.add('main-shorted-item');
             
@@ -1329,35 +1288,57 @@
             const form=document.createElement('form');
             form.classList.add('main-shorted-item__link--form');
             form.appendChild(btn);
-            
             form.addEventListener('submit',(e)=>{
                 e.preventDefault();
             });
-            
+
             const linkSmall=document.createElement('p');
-            linkSmall.textContent=resultado;
+            linkSmall.textContent=shortLink;
             linkSmall.classList.add('main-shorted-item__link--small');
-            
+            linkSmall.setAttribute("id",linkOri);
+
             const linkTall=document.createElement('p');
-            linkTall.textContent=url;
+            linkTall.textContent=linkOri;
             linkTall.classList.add('main-shorted-item__link--tall');
-            
+
+
             link.appendChild(linkTall);
             link.appendChild(linkSmall);
             link.appendChild(form);
-            constaintLink.appendChild(link);
+            
+            
+            btn.addEventListener('click',(event)=>{
+                btn.innerText="Copied!"; 
+                btn.style.backgroundColor="hsl(257, 27%, 26%)";
+                
+                const domlink=document.getElementById(linkOri);
+                // domlink.select();
+                // domlink.setSelectionRange(0, 99999); // For mobile devices
+
+                navigator.clipboard.writeText(domlink.innerText);
+            });
+
+            return link;
+            
+        }
+
+        function listDom(){
+            getStorage().forEach((cardLink)=>{
+                constaintLink.appendChild(makeDom(cardLink.id,cardLink.short));
+            });
+        }
+
+        function addDom(url,resultado){
+            constaintLink.appendChild(makeDom(url,resultado));
+
             const obj={id:url,short:resultado};
             linksRemote=getStorage();
             linksRemote.push(obj);
             
             localStorage.setItem("listaLink",JSON.stringify(linksRemote));
 
-            btn.addEventListener('click',(event)=>{
-                btn.innerText="Copied!"; 
-                btn.style.backgroundColor="hsl(257, 27%, 26%)";
-            });
-
-            input.value='';
+            endApp();
+            
         }
         
         function consultaApi(url,callback){
@@ -1395,6 +1376,18 @@
             return valid;
         }
         
+        function messagesErrors(mensaje){
+            input.style.setProperty("--color-placeholder", "hsl(0, 87%, 67%)");
+            input.style.border="2px solid hsl(0, 87%, 67%)";
+            message.style.display="block";
+            message.innerText=mensaje;
+            throw Error(mensaje);
+        }
+
+        function endApp(){
+            input.value='';
+        }
+
         inicio(forms);
 
         menu.addEventListener('click',function(){
@@ -1404,28 +1397,16 @@
         btnAdd.addEventListener('click',function(){
             
             if(!input.value){
-                input.style.setProperty("--color-placeholder", "hsl(0, 87%, 67%)");
-                input.style.border="2px solid hsl(0, 87%, 67%)";
-                message.style.display="block";
-                message.innerText="Please add a link";
-                throw Error('Please add a link');
+                messagesErrors("Please add a link");
             }
 
             if(!validarURL(input.value)){
-                input.style.setProperty("--color-placeholder", "hsl(0, 87%, 67%)");
-                input.style.border="2px solid hsl(0, 87%, 67%)";
-                message.style.display="block";
-                message.innerText="No url valid";
-                throw Error('No url valid');  
+                messagesErrors("No url valid");
             }
             
 
             if(validateUrlExisting(input.value)){
-                input.style.setProperty("--color-placeholder", "hsl(0, 87%, 67%)");
-                input.style.border="2px solid hsl(0, 87%, 67%)";
-                message.style.display="block";
-                message.innerText="Url Exisitng";
-                throw Error('Url Exisitng');  
+                messagesErrors("Url Exisitng");
             };
 
             input.style.setProperty("--color-placeholder", "hsl(0, 0%, 75%)");
@@ -1439,10 +1420,6 @@
 
         });
 
-
-
-
-
-  </script>
+ </script>
 </body>
 </html>
