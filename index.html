@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
     <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
     <title>Frontend Mentor | Shortly URL shortening API Challenge</title>
@@ -1285,6 +1286,7 @@
             
             const btn=document.createElement('button');
             btn.textContent="Copy";
+            btn.setAttribute("type","button");
             const form=document.createElement('form');
             form.classList.add('main-shorted-item__link--form');
             form.appendChild(btn);
